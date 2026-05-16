@@ -1,0 +1,57 @@
+# Build directories
+/build/
+/cmake-build-*/
+/out/
+
+# CMake generated files
+CMakeUserPresets.json
+compile_commands.json
+cmake_install.cmake
+install_manifest.txt
+CTestTestfile.cmake
+
+# Build system metadata
+CMakeCache.txt
+CMakeFiles/
+.ninja_deps
+.ninja_log
+build.ninja
+rules.ninja
+
+# Embedded build outputs
+*.o
+*.obj
+*.d
+*.su
+*.a
+*.lib
+*.elf
+*.axf
+*.map
+*.hex
+*.bin
+*.lst
+*.list
+
+# CubeMX / STM32 temporary files
+mx.scratch
+
+# IDE and editor settings
+.settings/
+.vscode/
+.idea/
+.vs/
+.clangd
+
+# OS files
+Thumbs.db
+.DS_Store
+
+
+# AI
+/.spec-workflow/
+/.agents/
+/CLAUDE.md
+
+# log files
+*.log

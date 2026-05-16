@@ -42,6 +42,7 @@ mx.scratch
 .idea/
 .vs/
 .clangd
+*.code-workspace
 
 # OS files
 Thumbs.db

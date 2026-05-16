@@ -26,7 +26,6 @@
 
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
-#include "app.h"
 #include "soft_uart.h"
 /* USER CODE END Includes */
 
@@ -98,7 +97,7 @@ int main(void)
   MX_TIM1_Init();
   MX_TIM3_Init();
   /* USER CODE BEGIN 2 */
-  soft_uart_init();
+  MX_SOFT_UART_Init();
   /* USER CODE END 2 */
 
   /* Init scheduler */

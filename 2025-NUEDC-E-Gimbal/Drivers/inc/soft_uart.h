@@ -1,35 +1,52 @@
-#ifndef __SOFT_UART_H_
-#define __SOFT_UART_H_
+/* USER CODE BEGIN Header */
+/**
+  ******************************************************************************
+  * @file    soft_uart.h
+  * @brief   This file contains all the function prototypes for
+  *          the soft_uart.c file
+  ******************************************************************************
+  * @attention
+  *
+  * Copyright (c) 2026 STMicroelectronics.
+  * All rights reserved.
+  *
+  * This software is licensed under terms that can be found in the LICENSE file
+  * in the root directory of this software component.
+  * If no LICENSE file comes with this software, it is provided AS-IS.
+  *
+  ******************************************************************************
+  */
+/* USER CODE END Header */
+#ifndef __SOFT_UART_H__
+#define __SOFT_UART_H__
 
 #ifdef __cplusplus
 extern "C" {
 #endif
 
-#include "stm32f4xx_hal.h"
-#include <stdint.h>
+/* Includes ------------------------------------------------------------------*/
+#include "main.h"
+#include "tim.h"
+#include "stm32f4xx_hal_soft_uart.h"
 
-#define SOFT_UART_BAUDRATE      9600U
-#define SOFT_UART_RX_BUF_SIZE   128U
-#define SOFT_UART_TX_BUF_SIZE   256U
+/* USER CODE BEGIN Includes */
 
-typedef enum
-{
-    SOFT_UART_RX_IDLE = 0,
-    SOFT_UART_RX_DATA,
-    SOFT_UART_RX_STOP,
-} soft_uart_rx_state_t;
+/* USER CODE END Includes */
 
-void soft_uart_init(void);
-void soft_uart_send_byte(uint8_t data);
-void soft_uart_send_buffer(const uint8_t *buf, uint16_t len);
-void soft_uart_send_string(const char *str);
+extern SOFT_UART_HandleTypeDef hsuart;
 
-int soft_uart_read_byte(uint8_t *data);
-uint16_t soft_uart_available(void);
+/* USER CODE BEGIN Private defines */
 
+/* USER CODE END Private defines */
+
+void MX_SOFT_UART_Init(void);
+
+/* USER CODE BEGIN Prototypes */
+
+/* USER CODE END Prototypes */
 
 #ifdef __cplusplus
 }
 #endif
 
-#endif /* __SOFT_UART_H_ */
+#endif /* __SOFT_UART_H__ */

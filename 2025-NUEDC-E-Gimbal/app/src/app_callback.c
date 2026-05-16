@@ -1,16 +1,15 @@
 #include "main.h"
+#include "soft_uart.h"
 
 void HAL_TIM_Callback(TIM_HandleTypeDef *htim)
 {
     if (htim->Instance == TIM1)
     {
-        extern void soft_uart_tim1_callback(void);
-        soft_uart_tim1_callback();
+        HAL_SOFT_UART_TxTimCallback(&hsuart);
     }
     else if (htim->Instance == TIM3)
     {
-        extern void soft_uart_tim3_callback(void);
-        soft_uart_tim3_callback();
+        HAL_SOFT_UART_RxTimCallback(&hsuart);
     }
 }
 
@@ -23,7 +22,6 @@ void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin)
     }
     else if (GPIO_Pin == SOFTUART_RX_Pin)
     {
-        extern void soft_uart_gpio_exti_callback(uint16_t GPIO_Pin);
-        soft_uart_gpio_exti_callback(GPIO_Pin);
+        HAL_SOFT_UART_RxExtiCallback(&hsuart, GPIO_Pin);
     }
 }

@@ -4,4 +4,5 @@ target_sources(${CMAKE_PROJECT_NAME} PRIVATE
     buzzer.c
     laser.c
     qd4310.c
+    log.c
 )

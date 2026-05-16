@@ -19,7 +19,7 @@ if(NOT CMAKE_BUILD_TYPE)
 endif()
 
 # Set the project name
-set(CMAKE_PROJECT_NAME 25ED-Gimbal)
+set(CMAKE_PROJECT_NAME 2025-NUEDC-E-Gimbal)
 
 # Enable compile command to ease indexing with e.g. clangd
 set(CMAKE_EXPORT_COMPILE_COMMANDS TRUE)
@@ -39,6 +39,7 @@ add_subdirectory(cmake/stm32cubemx)
 add_subdirectory(Drivers/src)
 add_subdirectory(devices/src)
 add_subdirectory(app/src)
+add_subdirectory(./test)
 
 # Link directories setup
 target_link_directories(${CMAKE_PROJECT_NAME} PRIVATE

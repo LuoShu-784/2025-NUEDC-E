@@ -37,12 +37,6 @@ rules.ninja
 mx.scratch
 
 # IDE and editor settings
-.settings/
-.vscode/
-.idea/
-.vs/
-.clangd
-*.code-workspace
 
 
 # OS files
@@ -51,9 +45,6 @@ Thumbs.db
 
 
 # AI
-.spec-workflow/
-.agents/
-CLAUDE.md
 
 # log files
 *.log

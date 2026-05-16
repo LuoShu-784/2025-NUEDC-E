@@ -135,6 +135,11 @@ static int test_hex_value(char ch)
 
 static bool test_hex_to_u8(const char *str, uint8_t *value)
 {
+    if (str == NULL || value == NULL || str[0] == '\0' || str[1] == '\0')
+    {
+        return false;
+    }
+
     int high = test_hex_value(str[0]);
     int low = test_hex_value(str[1]);
 
@@ -149,7 +154,7 @@ static bool test_hex_to_u8(const char *str, uint8_t *value)
 
 static void test_send_string(const char *str)
 {
-    soft_uart_send_string(str);
+    HAL_SOFT_UART_Transmit(&hsuart, (uint8_t *)str, test_str_len(str), HAL_MAX_DELAY);
     s_tx_bytes += test_str_len(str);
 }
 
@@ -220,12 +225,12 @@ static void test_process_rx(void)
 {
     uint8_t data;
 
-    while (soft_uart_read_byte(&data) == 0)
+    while (HAL_SOFT_UART_Receive_IT(&hsuart, &data, 1) == HAL_OK)
     {
         s_rx_bytes++;
 
 #if SOFTUART_TEST_ECHO_ENABLE
-        soft_uart_send_byte(data);
+        HAL_SOFT_UART_Transmit_IT(&hsuart, &data, 1);
         s_tx_bytes++;
         s_echo_bytes++;
 #endif

@@ -45,15 +45,15 @@ void MX_SOFT_UART_Init(void)
     .TxPin = SOFTUART_TX_Pin,
     .RxPort = SOFTUART_RX_GPIO_Port,
     .RxPin = SOFTUART_RX_Pin,
-    .TxTim = &htim1,
-    .RxTim = &htim3,
-    .RxExtiIRQn = EXTI15_10_IRQn
+    .TxTim = &SOFTUART_TX_TIM,
+    .RxTim = &SOFTUART_RX_TIM,
+    .RxExtiIRQn = SOFTUART_RX_EXTI_IRQn
   };
 
   hsuart.HwConfig = &hw_config;
-  hsuart.Init.BaudRate = 9600;
-  hsuart.Init.RxBufferSize = 128;
-  hsuart.Init.TxBufferSize = 256;
+  hsuart.Init.BaudRate = SOFTUART_BAUDRATE;
+  hsuart.Init.RxBufferSize = SOFTUART_RX_BUFFER_SIZE;
+  hsuart.Init.TxBufferSize = SOFTUART_TX_BUFFER_SIZE;
 
   if (HAL_SOFT_UART_Init(&hsuart) != HAL_OK)
   {

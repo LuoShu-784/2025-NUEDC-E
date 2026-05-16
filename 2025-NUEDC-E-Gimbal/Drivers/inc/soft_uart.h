@@ -37,6 +37,47 @@ extern SOFT_UART_HandleTypeDef hsuart;
 
 /* USER CODE BEGIN Private defines */
 
+/* 硬件配置宏定义 - 可在外部覆盖 */
+#ifndef SOFTUART_TX_GPIO_Port
+#define SOFTUART_TX_GPIO_Port           GPIOB
+#endif
+
+#ifndef SOFTUART_TX_Pin
+#define SOFTUART_TX_Pin                 GPIO_PIN_14
+#endif
+
+#ifndef SOFTUART_RX_GPIO_Port
+#define SOFTUART_RX_GPIO_Port           GPIOB
+#endif
+
+#ifndef SOFTUART_RX_Pin
+#define SOFTUART_RX_Pin                 GPIO_PIN_15
+#endif
+
+#ifndef SOFTUART_TX_TIM
+#define SOFTUART_TX_TIM                 htim1
+#endif
+
+#ifndef SOFTUART_RX_TIM
+#define SOFTUART_RX_TIM                 htim3
+#endif
+
+#ifndef SOFTUART_RX_EXTI_IRQn
+#define SOFTUART_RX_EXTI_IRQn           EXTI15_10_IRQn
+#endif
+
+#ifndef SOFTUART_BAUDRATE
+#define SOFTUART_BAUDRATE               9600
+#endif
+
+#ifndef SOFTUART_RX_BUFFER_SIZE
+#define SOFTUART_RX_BUFFER_SIZE         256
+#endif
+
+#ifndef SOFTUART_TX_BUFFER_SIZE
+#define SOFTUART_TX_BUFFER_SIZE         512
+#endif
+
 /* USER CODE END Private defines */
 
 void MX_SOFT_UART_Init(void);

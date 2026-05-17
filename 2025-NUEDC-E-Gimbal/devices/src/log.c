@@ -18,13 +18,13 @@
 #include <stdarg.h>
 #include <string.h>
 
-/* ANSI color codes */
+/* ANSI color codes - 使用高亮色(90-97)提升亮度，ERROR/WARN 加粗(1;) */
 #if LOG_ENABLE_COLOR
 #define ANSI_COLOR_RESET   "\033[0m"
-#define ANSI_COLOR_WHITE   "\033[37m"
-#define ANSI_COLOR_GREEN   "\033[32m"
-#define ANSI_COLOR_YELLOW  "\033[33m"
-#define ANSI_COLOR_RED     "\033[31m"
+#define ANSI_COLOR_WHITE   "\033[97m"        /* 亮白色 */
+#define ANSI_COLOR_GREEN   "\033[92m"        /* 亮绿色 */
+#define ANSI_COLOR_YELLOW  "\033[1;93m"      /* 加粗亮黄色 */
+#define ANSI_COLOR_RED     "\033[1;91m"      /* 加粗亮红色 */
 #else
 #define ANSI_COLOR_RESET   ""
 #define ANSI_COLOR_WHITE   ""

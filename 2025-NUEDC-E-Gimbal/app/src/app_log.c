@@ -9,7 +9,7 @@ extern void log_output_handler(const char *str, uint16_t len);
 
 typedef struct {
     log_level_t level;
-    char tag[16];
+    char tag[32];
     char message[128];
 } log_msg_t;
 

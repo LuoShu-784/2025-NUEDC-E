@@ -5,6 +5,8 @@
 #include <string.h>
 #include <stdio.h>
 
+extern void log_output_handler(const char *str, uint16_t len);
+
 typedef struct {
     log_level_t level;
     char tag[32];
@@ -59,19 +61,4 @@ void logq_write(log_level_t level, const char *tag, const char *fmt, ...)
     va_end(args);
 
     log_queue_push(&msg);
-}
-
-
-void log_task(void *argument)
-{
-    osDelay(100);
-    UNUSED(argument);
-
-    app_log_init();
-
-    while (1)
-    {
-        app_log_process();
-        osDelay(20);
-    }
 }

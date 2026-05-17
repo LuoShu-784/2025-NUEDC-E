@@ -20,8 +20,6 @@ extern "C" {
 /* Initialize log system with CMSIS-RTOS2 queue */
 void app_log_init(void);
 
-void log_output_handler(const char *str, uint16_t len);
-
 /* Process queued log messages */
 void app_log_process(void);
 

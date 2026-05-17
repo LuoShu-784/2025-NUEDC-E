@@ -54,24 +54,26 @@ void led_task(void *argument)
 
     while (1)
     {
-        // flags = osEventFlagsWait(s_event, LED_EVT_ALL, osFlagsWaitAny, osWaitForever);
+        flags = osEventFlagsWait(s_event, LED_EVT_ALL, osFlagsWaitAny, osWaitForever);
 
-        // if (flags & osFlagsError) continue;
+        if (flags & osFlagsError) continue;
         
-        // osTimerStop(s_timer);
-        // if (flags & LED_COLOR_MASK) {
-        //     s_color = flags & LED_COLOR_MASK;
-        // }
+        osTimerStop(s_timer);
+        if (flags & LED_COLOR_MASK) {
+            s_color = flags & LED_COLOR_MASK;
+        }
 
-        // if (flags & LED_MOD_OFF) {
-        //     led_off_all();
-        // } else if (flags & LED_MOD_ON) {
-        //     set_led_color(s_color);
-        // } else if (flags & LED_MOD_BLINK_NORMAL) {
-        //     osTimerStart(s_timer, 500);
-        // } else if (flags & LED_MOD_BLINK_FAST) {
-        //     osTimerStart(s_timer, 150);
-        // }
+        if (flags & LED_MOD_OFF) {
+            led_off_all();
+        } else if (flags & LED_MOD_ON) {
+            set_led_color(s_color);
+        } else if (flags & LED_MOD_BLINK_NORMAL) {
+            osTimerStart(s_timer, LED_BLINK_NORMAL_MS);
+        } else if (flags & LED_MOD_BLINK_FAST) {
+            osTimerStart(s_timer, LED_BLINK_FAST_MS);
+        } else if (flags & LED_MOD_BLINK_SLOW) {
+            osTimerStart(s_timer, LED_BLINK_SLOW_MS);
+        }
         osDelay(1000);
     }
 }

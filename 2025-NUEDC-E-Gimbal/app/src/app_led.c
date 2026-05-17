@@ -74,6 +74,6 @@ void led_task(void *argument)
         } else if (flags & LED_MOD_BLINK_SLOW) {
             osTimerStart(s_timer, LED_BLINK_SLOW_MS);
         }
-        osDelay(1000);
+        osDelay(500);
     }
 }

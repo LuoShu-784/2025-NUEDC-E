@@ -24,6 +24,14 @@ static bool log_queue_push(const log_msg_t *msg)
     return (status == osOK);
 }
 
+__weak void log_output_handler(const char *str, uint16_t len)
+{
+    if (str == NULL || len == 0) {
+        return;
+    }
+    HAL_SOFT_UART_Transmit(&hsuart, (uint8_t *)str, len, HAL_MAX_DELAY);
+}
+
 void app_log_init(void)
 {
     log_init(log_output_handler);

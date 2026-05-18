@@ -6,21 +6,20 @@ extern "C" {
 #endif /* __cplusplus */
 
 #include "stm32f4xx_hal.h"
-#include "drivers.h"
 #include "main.h"
 #include <stdbool.h>
 
 
 #ifndef LASER_PIN_STATE
-#define LASER_PIN_STATE   GPIO_PIN_RESET
+#define LASER_PIN_STATE   GPIO_PIN_SET
 #endif
 
-static inline laser_on(void)
+static inline void laser_on(void)
 {
     HAL_GPIO_WritePin(LASER_GPIO_Port, LASER_Pin, LASER_PIN_STATE);
 }
 
-static inline laser_off(void)
+static inline void laser_off(void)
 {
     HAL_GPIO_WritePin(LASER_GPIO_Port, LASER_Pin, !LASER_PIN_STATE);
 }

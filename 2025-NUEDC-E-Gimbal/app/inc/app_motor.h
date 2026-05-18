@@ -21,12 +21,13 @@ typedef struct
     float current; // 电流，单位A
 } motor_data_t;
 
-void app_motor_init(void);
-void app_motor_get_data(uint8_t id, motor_data_t *data);
-void app_motor_enable(uint8_t id);
-void app_motor_disable(uint8_t id);
-void app_motor_set_speed(uint8_t id, float speed);
-void app_motor_set_angle(uint8_t id, float angle_deg);
+void motor_init(void);
+void motor_get_data(uint8_t id, motor_data_t *data);
+void motor_enable(uint8_t id);
+void motor_disable(uint8_t id);
+void motor_set_speed(uint8_t id, float speed);
+void motor_set_low_speed(uint8_t id, float speed);
+void motor_set_angle(uint8_t id, float angle_deg);
 void motor_irq_handler(CAN_HandleTypeDef *hcanx);
 
 #ifdef __cplusplus

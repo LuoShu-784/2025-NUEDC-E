@@ -28,14 +28,14 @@ static void timer_callback(void *argument)
     toggle = !toggle;
 }
 
-void app_led_ctrl(uint8_t color, uint8_t mode)
+void led_ctrl(uint8_t color, uint8_t mode)
 {
     osEventFlagsSet(s_event, color | mode);
 }
 
 void led_task(void *argument)
 {
-    osDelay(100);
+    osDelay(10);
     UNUSED(argument);
 
     led_off_all();

@@ -29,7 +29,7 @@ extern "C" {
 #define LED_BLINK_FAST_MS       (150U)
 #define LED_BLINK_SLOW_MS       (900U)
 
-void app_led_ctrl(uint8_t color, uint8_t mode);
+void led_ctrl(uint8_t color, uint8_t mode);
 
 #ifdef __cplusplus
 }

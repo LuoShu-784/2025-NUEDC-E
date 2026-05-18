@@ -68,6 +68,13 @@ const osThreadAttr_t LOG_attributes = {
   .stack_size = 512 * 4,
   .priority = (osPriority_t) osPriorityLow,
 };
+/* Definitions for COMM */
+osThreadId_t COMMHandle;
+const osThreadAttr_t COMM_attributes = {
+  .name = "COMM",
+  .stack_size = 512 * 4,
+  .priority = (osPriority_t) osPriorityRealtime7,
+};
 
 /* Private function prototypes -----------------------------------------------*/
 /* USER CODE BEGIN FunctionPrototypes */
@@ -77,6 +84,7 @@ const osThreadAttr_t LOG_attributes = {
 void led_task(void *argument);
 void app_main_task(void *argument);
 void log_task(void *argument);
+void comm_task(void *argument);
 
 void MX_FREERTOS_Init(void); /* (MISRA C 2004 rule 8.1) */
 
@@ -115,6 +123,9 @@ void MX_FREERTOS_Init(void) {
 
   /* creation of LOG */
   LOGHandle = osThreadNew(log_task, NULL, &LOG_attributes);
+
+  /* creation of COMM */
+  COMMHandle = osThreadNew(comm_task, NULL, &COMM_attributes);
 
   /* USER CODE BEGIN RTOS_THREADS */
   /* add threads, ... */
@@ -178,6 +189,24 @@ __weak void log_task(void *argument)
     osDelay(1);
   }
   /* USER CODE END log_task */
+}
+
+/* USER CODE BEGIN Header_comm_task */
+/**
+* @brief Function implementing the COMM thread.
+* @param argument: Not used
+* @retval None
+*/
+/* USER CODE END Header_comm_task */
+__weak void comm_task(void *argument)
+{
+  /* USER CODE BEGIN comm_task */
+  /* Infinite loop */
+  for(;;)
+  {
+    osDelay(1);
+  }
+  /* USER CODE END comm_task */
 }
 
 /* Private application code --------------------------------------------------*/

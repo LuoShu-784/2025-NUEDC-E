@@ -17,6 +17,10 @@ extern "C" {
 #include "log.h"
 #include <stdarg.h>
 
+#define APP_LOG_TAG_SIZE          32U
+#define APP_LOG_MESSAGE_SIZE      128U
+#define APP_LOG_INTERVAL_MS       20U
+
 /* Initialize log system with CMSIS-RTOS2 queue */
 void app_log_init(void);
 

@@ -39,7 +39,7 @@ void HAL_UARTEx_RxEventCallback(UART_HandleTypeDef *huart, uint16_t Size)
     }
 
     if (huart->Instance == USART1) {
-        jy901s_rx_event_handler(Size);
+        jy901s_irq_handler(Size);
     }
 }
 

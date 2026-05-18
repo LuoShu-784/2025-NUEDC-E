@@ -7,8 +7,8 @@
 
 typedef struct {
     log_level_t level;
-    char tag[32];
-    char message[128];
+    char tag[APP_LOG_TAG_SIZE];
+    char message[APP_LOG_MESSAGE_SIZE];
 } log_msg_t;
 
 static osMessageQueueId_t log_queue_handle = NULL;
@@ -80,6 +80,6 @@ void log_task(void *argument)
     while (1)
     {
         app_log_process();
-        osDelay(20);
+        osDelay(APP_LOG_INTERVAL_MS);
     }
 }

@@ -61,19 +61,19 @@ const osThreadAttr_t MAIN_attributes = {
   .stack_size = 512 * 4,
   .priority = (osPriority_t) osPriorityRealtime1,
 };
-/* Definitions for TEST */
-osThreadId_t TESTHandle;
-const osThreadAttr_t TEST_attributes = {
-  .name = "TEST",
-  .stack_size = 512 * 4,
-  .priority = (osPriority_t) osPriorityNormal,
-};
 /* Definitions for LOG */
 osThreadId_t LOGHandle;
 const osThreadAttr_t LOG_attributes = {
   .name = "LOG",
   .stack_size = 512 * 4,
   .priority = (osPriority_t) osPriorityLow,
+};
+/* Definitions for COMM */
+osThreadId_t COMMHandle;
+const osThreadAttr_t COMM_attributes = {
+  .name = "COMM",
+  .stack_size = 512 * 4,
+  .priority = (osPriority_t) osPriorityRealtime7,
 };
 
 /* Private function prototypes -----------------------------------------------*/
@@ -83,8 +83,8 @@ const osThreadAttr_t LOG_attributes = {
 
 void led_task(void *argument);
 void app_main_task(void *argument);
-void test_task(void *argument);
 void log_task(void *argument);
+void comm_task(void *argument);
 
 void MX_FREERTOS_Init(void); /* (MISRA C 2004 rule 8.1) */
 
@@ -121,11 +121,11 @@ void MX_FREERTOS_Init(void) {
   /* creation of MAIN */
   MAINHandle = osThreadNew(app_main_task, NULL, &MAIN_attributes);
 
-  /* creation of TEST */
-  TESTHandle = osThreadNew(test_task, NULL, &TEST_attributes);
-
   /* creation of LOG */
   LOGHandle = osThreadNew(log_task, NULL, &LOG_attributes);
+
+  /* creation of COMM */
+  COMMHandle = osThreadNew(comm_task, NULL, &COMM_attributes);
 
   /* USER CODE BEGIN RTOS_THREADS */
   /* add threads, ... */
@@ -173,24 +173,6 @@ __weak void app_main_task(void *argument)
   /* USER CODE END app_main_task */
 }
 
-/* USER CODE BEGIN Header_test_task */
-/**
-* @brief Function implementing the TEST thread.
-* @param argument: Not used
-* @retval None
-*/
-/* USER CODE END Header_test_task */
-__weak void test_task(void *argument)
-{
-  /* USER CODE BEGIN test_task */
-  /* Infinite loop */
-  for(;;)
-  {
-    osDelay(1);
-  }
-  /* USER CODE END test_task */
-}
-
 /* USER CODE BEGIN Header_log_task */
 /**
 * @brief Function implementing the LOG thread.
@@ -207,6 +189,24 @@ __weak void log_task(void *argument)
     osDelay(1);
   }
   /* USER CODE END log_task */
+}
+
+/* USER CODE BEGIN Header_comm_task */
+/**
+* @brief Function implementing the COMM thread.
+* @param argument: Not used
+* @retval None
+*/
+/* USER CODE END Header_comm_task */
+__weak void comm_task(void *argument)
+{
+  /* USER CODE BEGIN comm_task */
+  /* Infinite loop */
+  for(;;)
+  {
+    osDelay(1);
+  }
+  /* USER CODE END comm_task */
 }
 
 /* Private application code --------------------------------------------------*/

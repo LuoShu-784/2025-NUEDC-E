@@ -54,13 +54,6 @@ const osThreadAttr_t LED_attributes = {
   .stack_size = 128 * 4,
   .priority = (osPriority_t) osPriorityNormal,
 };
-/* Definitions for KEY */
-osThreadId_t KEYHandle;
-const osThreadAttr_t KEY_attributes = {
-  .name = "KEY",
-  .stack_size = 128 * 4,
-  .priority = (osPriority_t) osPriorityAboveNormal,
-};
 /* Definitions for MAIN */
 osThreadId_t MAINHandle;
 const osThreadAttr_t MAIN_attributes = {
@@ -89,7 +82,6 @@ const osThreadAttr_t LOG_attributes = {
 /* USER CODE END FunctionPrototypes */
 
 void led_task(void *argument);
-void key_task(void *argument);
 void app_main_task(void *argument);
 void test_task(void *argument);
 void log_task(void *argument);
@@ -126,9 +118,6 @@ void MX_FREERTOS_Init(void) {
   /* creation of LED */
   LEDHandle = osThreadNew(led_task, NULL, &LED_attributes);
 
-  /* creation of KEY */
-  KEYHandle = osThreadNew(key_task, NULL, &KEY_attributes);
-
   /* creation of MAIN */
   MAINHandle = osThreadNew(app_main_task, NULL, &MAIN_attributes);
 
@@ -164,24 +153,6 @@ __weak void led_task(void *argument)
     osDelay(1);
   }
   /* USER CODE END led_task */
-}
-
-/* USER CODE BEGIN Header_key_task */
-/**
-* @brief Function implementing the KEY thread.
-* @param argument: Not used
-* @retval None
-*/
-/* USER CODE END Header_key_task */
-__weak void key_task(void *argument)
-{
-  /* USER CODE BEGIN key_task */
-  /* Infinite loop */
-  for(;;)
-  {
-    osDelay(1);
-  }
-  /* USER CODE END key_task */
 }
 
 /* USER CODE BEGIN Header_app_main_task */

@@ -1,3 +1,8 @@
+/**
+ * @file led.c
+ * @brief RGB LED 驱动实现（GPIO）
+ */
+
 #include "led.h"
 #include "main.h"
 #include <stdint.h>

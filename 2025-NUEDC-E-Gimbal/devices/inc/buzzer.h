@@ -1,10 +1,17 @@
-#ifndef __BUZZER_H
-#define __BUZZER_H
+/**
+ * @file buzzer.h
+ * @brief 蜂鸣器驱动（TIM4 PWM）
+ */
+
+#ifndef __BUZZER_H_
+#define __BUZZER_H_
+
+#ifdef __cplusplus
+extern "C" {
+#endif
 
 #include <stdint.h>
 #include <stdbool.h>
-
-// 音符定义（频率 Hz）
 typedef enum {
     NOTE_SILENT = 0,
     NOTE_C4  = 262,
@@ -61,4 +68,8 @@ void buzzer_play_music(const music_note_t *music, uint16_t length);
 bool buzzer_is_playing(void);
 void buzzer_update(void);
 
+#ifdef __cplusplus
+}
 #endif
+
+#endif /* __BUZZER_H_ */

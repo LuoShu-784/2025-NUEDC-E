@@ -29,7 +29,7 @@ typedef void (*jy901s_callback_t)(const jy901s_data_t *attitude);
 
 bool jy901s_init(void);
 void jy901s_set_callback(jy901s_callback_t callback);
-void jy901s_rx_event_handler(uint16_t size);
+void jy901s_irq_handler(uint16_t size);
 bool jy901s_get_attitude(jy901s_data_t *attitude);
 void jy901s_get_statistics(uint32_t *frame_count, uint32_t *error_count);
 

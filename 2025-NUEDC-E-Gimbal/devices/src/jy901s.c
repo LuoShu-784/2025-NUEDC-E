@@ -3,7 +3,7 @@
  * @brief JY901S IMU 姿态数据解析（USART1 + DMA + IDLE）
  *
  * 模块自管 DMA 接收缓冲与解析状态机，对外仅暴露设备级单例 API。
- * HAL 层 RxEventCallback 由 app_callback.c 转发到 jy901s_rx_event_handler()，
+ * HAL 层 RxEventCallback 由 app_callback.c 转发到 jy901s_irq_handler()，
  * 解析在 ISR 上下文完成，回调亦在 ISR 中执行（实现侧需使用 ISR 安全 API）。
  */
 
@@ -142,7 +142,7 @@ static void feed_range(uint16_t start, uint16_t end, jy901s_callback_t cb)
     }
 }
 
-void jy901s_rx_event_handler(uint16_t size)
+void jy901s_irq_handler(uint16_t size)
 {
     if (!is_initialized || size > JY901S_RX_BUF_SIZE) {
         return;

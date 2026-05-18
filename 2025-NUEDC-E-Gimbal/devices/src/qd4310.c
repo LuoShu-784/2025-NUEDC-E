@@ -1,10 +1,11 @@
-//
-// Created by jason on 25-10-16.
-//
-#include "main.h"
-#include "QD4310.h"
+/**
+ * @file qd4310.c
+ * @brief QD4310 电机驱动实现（CAN）
+ */
 
-// 限制函数，用于替代C++的std::clamp
+#include "qd4310.h"
+#include "main.h"
+
 static float qd4310_clamp(float value, float min, float max) 
 {
     if (value < min) return min;

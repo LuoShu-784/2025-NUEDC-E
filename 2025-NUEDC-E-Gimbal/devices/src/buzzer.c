@@ -1,3 +1,8 @@
+/**
+ * @file buzzer.c
+ * @brief 蜂鸣器驱动实现（TIM4 PWM）
+ */
+
 #include "buzzer.h"
 #include "main.h"
 #include <stdbool.h>

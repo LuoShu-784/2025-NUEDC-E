@@ -8,6 +8,8 @@ extern "C" {
 #include "main.h"
 #include "cmsis_os2.h"
 
+#define APP_LED_INTERVAL_MS       500U
+
 #define LED_RED             (1U << 0)
 #define LED_GREEN           (1U << 1)
 #define LED_BLUE            (1U << 2)

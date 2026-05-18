@@ -65,7 +65,7 @@ const osThreadAttr_t KEY_attributes = {
 osThreadId_t MOTORHandle;
 const osThreadAttr_t MOTOR_attributes = {
   .name = "MOTOR",
-  .stack_size = 128 * 4,
+  .stack_size = 512 * 4,
   .priority = (osPriority_t) osPriorityRealtime,
 };
 /* Definitions for MAIN */

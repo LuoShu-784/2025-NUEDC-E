@@ -1,4 +1,4 @@
-#include "main.h"
+#include "app_motor.h"
 #include "qd4310.h"
 #include "cmsis_os2.h"
 
@@ -39,24 +39,13 @@ void motor_init(void)
     motor1.hcan = hcan;
 }
 
-void motor_task(void *argument)
+void motor_irq_handler(CAN_HandleTypeDef *hcanx)
 {
-    osDelay(100);
-    UNUSED(argument);
-
-    motor_init();
-    
-    while (1)
-    {
-        osDelay(1000);
-        
+    if (hcanx == NULL) {
+        return;
     }
 
-}
-
-void HAL_CAN_RxFifo0MsgPendingCallback(CAN_HandleTypeDef *hcanx) 
-{
-    if (hcanx == hcan) 
+    if (hcanx == hcan)
     {
         CAN_RxHeaderTypeDef rx_header;
         uint8_t rx_data[8];

@@ -5,7 +5,7 @@
 
 #include "main.h"
 #include "soft_uart.h"
-#include "app_uart.h"
+#include "app_motor.h"
 #include "jy901s.h"
 #include "key.h"
 
@@ -41,4 +41,13 @@ void HAL_UARTEx_RxEventCallback(UART_HandleTypeDef *huart, uint16_t Size)
     if (huart->Instance == USART1) {
         jy901s_rx_event_handler(Size);
     }
+}
+
+void HAL_CAN_RxFifo0MsgPendingCallback(CAN_HandleTypeDef *hcanx)
+{
+    if (hcanx == NULL) {
+        return;
+    }
+
+    motor_irq_handler(hcanx);
 }

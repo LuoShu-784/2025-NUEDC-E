@@ -75,7 +75,7 @@ extern SOFT_UART_HandleTypeDef hsuart;
 #endif
 
 #ifndef SOFTUART_TX_BUFFER_SIZE
-#define SOFTUART_TX_BUFFER_SIZE         512
+#define SOFTUART_TX_BUFFER_SIZE         1024
 #endif
 
 /* USER CODE END Private defines */

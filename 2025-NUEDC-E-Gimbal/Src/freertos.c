@@ -61,13 +61,6 @@ const osThreadAttr_t KEY_attributes = {
   .stack_size = 128 * 4,
   .priority = (osPriority_t) osPriorityAboveNormal,
 };
-/* Definitions for MOTOR */
-osThreadId_t MOTORHandle;
-const osThreadAttr_t MOTOR_attributes = {
-  .name = "MOTOR",
-  .stack_size = 512 * 4,
-  .priority = (osPriority_t) osPriorityRealtime,
-};
 /* Definitions for MAIN */
 osThreadId_t MAINHandle;
 const osThreadAttr_t MAIN_attributes = {
@@ -97,7 +90,6 @@ const osThreadAttr_t LOG_attributes = {
 
 void led_task(void *argument);
 void key_task(void *argument);
-void motor_task(void *argument);
 void app_main_task(void *argument);
 void test_task(void *argument);
 void log_task(void *argument);
@@ -136,9 +128,6 @@ void MX_FREERTOS_Init(void) {
 
   /* creation of KEY */
   KEYHandle = osThreadNew(key_task, NULL, &KEY_attributes);
-
-  /* creation of MOTOR */
-  MOTORHandle = osThreadNew(motor_task, NULL, &MOTOR_attributes);
 
   /* creation of MAIN */
   MAINHandle = osThreadNew(app_main_task, NULL, &MAIN_attributes);
@@ -193,24 +182,6 @@ __weak void key_task(void *argument)
     osDelay(1);
   }
   /* USER CODE END key_task */
-}
-
-/* USER CODE BEGIN Header_motor_task */
-/**
-* @brief Function implementing the MOTOR thread.
-* @param argument: Not used
-* @retval None
-*/
-/* USER CODE END Header_motor_task */
-__weak void motor_task(void *argument)
-{
-  /* USER CODE BEGIN motor_task */
-  /* Infinite loop */
-  for(;;)
-  {
-    osDelay(1);
-  }
-  /* USER CODE END motor_task */
 }
 
 /* USER CODE BEGIN Header_app_main_task */

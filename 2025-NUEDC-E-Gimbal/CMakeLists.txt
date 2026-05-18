@@ -39,7 +39,6 @@ add_subdirectory(cmake/stm32cubemx)
 add_subdirectory(Drivers/src)
 add_subdirectory(devices/src)
 add_subdirectory(app/src)
-add_subdirectory(./test)
 
 # Link directories setup
 target_link_directories(${CMAKE_PROJECT_NAME} PRIVATE

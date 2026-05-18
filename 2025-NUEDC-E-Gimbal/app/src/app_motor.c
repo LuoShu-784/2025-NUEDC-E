@@ -90,7 +90,7 @@ void motor_irq_handler(CAN_HandleTypeDef *hcanx)
     }
 }
 
-void app_motor_init(void)
+void motor_init(void)
 {
     hcan = &hcan1;
 
@@ -104,11 +104,11 @@ void app_motor_init(void)
     motor1.hcan = hcan;
 
     can_interface_init(hcan);
-    app_motor_disable(0);
-    app_motor_disable(1);
+    motor_disable(0);
+    motor_disable(1);
 }
 
-void app_motor_get_data(uint8_t id, motor_data_t *data)
+void motor_get_data(uint8_t id, motor_data_t *data)
 {
     if (data == NULL) {
         return;
@@ -126,7 +126,7 @@ void app_motor_get_data(uint8_t id, motor_data_t *data)
     data->current = motor->current;
 }
 
-void app_motor_enable(uint8_t id)
+void motor_enable(uint8_t id)
 {
     qd4310_t *motor = motor_get_handle(id);
     if (motor == NULL) {
@@ -137,7 +137,7 @@ void app_motor_enable(uint8_t id)
     qd4310_enable(motor);
 }
 
-void app_motor_disable(uint8_t id)
+void motor_disable(uint8_t id)
 {
     qd4310_t *motor = motor_get_handle(id);
     if (motor == NULL) {
@@ -148,7 +148,7 @@ void app_motor_disable(uint8_t id)
     qd4310_disable(motor);
 }
 
-void app_motor_set_speed(uint8_t id, float speed)
+void motor_set_speed(uint8_t id, float speed)
 {
     qd4310_t *motor = motor_get_handle(id);
     if (motor == NULL) {
@@ -158,7 +158,7 @@ void app_motor_set_speed(uint8_t id, float speed)
     qd4310_set_speed(motor, speed);
 }
 
-void app_motor_set_angle(uint8_t id, float angle_deg)
+void motor_set_angle(uint8_t id, float angle_deg)
 {
     qd4310_t *motor = motor_get_handle(id);
     if (motor == NULL) {
@@ -166,4 +166,14 @@ void app_motor_set_angle(uint8_t id, float angle_deg)
     }
 
     qd4310_set_angle(motor, motor_deg_to_rad(angle_deg));
+}
+
+void motor_set_low_speed(uint8_t id, float speed)
+{
+    qd4310_t *motor = motor_get_handle(id);
+    if (motor == NULL) {
+        return;
+    }
+
+    qd4310_set_low_speed(motor, speed);
 }

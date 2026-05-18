@@ -72,7 +72,7 @@ void logq_write(log_level_t level, const char *tag, const char *fmt, ...)
 
 void log_task(void *argument)
 {
-    osDelay(100);
+    osDelay(10);
     UNUSED(argument);
 
     app_log_init();

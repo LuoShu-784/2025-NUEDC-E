@@ -6,8 +6,10 @@ extern "C" {
 #endif /* __cplusplus */
 
 #include "stm32f4xx_hal.h"
+#include "laser.h"
+#include "soft_uart.h"
 
-void app_main(void);
+void init(void);
 
 #ifdef __cplusplus
 }

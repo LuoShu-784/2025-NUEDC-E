@@ -7,8 +7,7 @@
 #include "soft_uart.h"
 #include "app_motor.h"
 #include "jy901s.h"
-#include "key.h"
-
+#include "k230.h"
 
 void HAL_TIM_Callback(TIM_HandleTypeDef *htim)
 {
@@ -25,9 +24,7 @@ void HAL_TIM_Callback(TIM_HandleTypeDef *htim)
 
 void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin)
 {
-    if (GPIO_Pin == KEY_Pin) {
-        key_irq_handler(GPIO_Pin);
-    } else if (GPIO_Pin == SOFTUART_RX_Pin) {
+    if (GPIO_Pin == SOFTUART_RX_Pin) {
         HAL_SOFT_UART_RxExtiCallback(&hsuart, GPIO_Pin);
     }
 }
@@ -40,6 +37,8 @@ void HAL_UARTEx_RxEventCallback(UART_HandleTypeDef *huart, uint16_t Size)
 
     if (huart->Instance == USART1) {
         jy901s_irq_handler(Size);
+    } else if (huart->Instance == USART6) {
+        k230_irq_handler(Size);
     }
 }
 

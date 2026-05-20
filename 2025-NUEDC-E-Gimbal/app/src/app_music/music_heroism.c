@@ -1,4 +1,4 @@
-#include "buzzer.h"
+#include "app_music.h"
 
 // 《英雄主义》乐谱数据
 // BPM = 195, 1=G, 4/4拍

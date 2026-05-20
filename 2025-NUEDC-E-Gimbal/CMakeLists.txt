@@ -57,6 +57,7 @@ target_include_directories(${CMAKE_PROJECT_NAME} PRIVATE
     Drivers/inc
     devices/inc
     app/inc
+    app/src/app_music
     Middlewares/inc
 )
 

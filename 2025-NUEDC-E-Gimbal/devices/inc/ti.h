@@ -1,6 +1,6 @@
 /**
  * @file ti.h
- * @brief TI 软串口数据接收（软串口 + 中断）
+ * @brief TI 软串口命令接收（软串口 + 任务轮询解析）
  */
 
 #ifndef __TI_H_
@@ -17,12 +17,32 @@ extern "C" {
 #define TI_CMD_MAX_LENGTH   64U
 
 /**
- * @brief TI 数据回调函数类型
- * @param data 接收到的数据指针
- * @param len 数据长度
+ * @brief TI 控制指令类型
+ */
+typedef enum {
+    CMD_UNKNOWN = 0,
+    CMD_MODE_CORNER_SELECT,    // 0xC2 - 角点选择模式
+    CMD_MODE_SHOOT_1_LAP,      // 0xC3 - 边打靶边循迹 1 圈
+    CMD_MODE_SHOOT_2_LAPS,     // 0xC4 - 边打靶边循迹 2 圈
+    CMD_MODE_CIRCLE_1_LAP,     // 0xC5 - 边画圆边循迹 1 圈
+    CMD_BEGIN,                 // 0x55 0x55 - 启动信号
+} ti_cmd_type_t;
+
+/**
+ * @brief TI 控制指令数据结构
+ */
+typedef struct {
+    ti_cmd_type_t type;
+    uint8_t data;  // 角点编号 (1-4) 或其他参数
+    bool valid;
+} ti_cmd_t;
+
+/**
+ * @brief TI 命令回调函数类型
+ * @param cmd 解析后的命令
  * @note 回调在任务上下文执行
  */
-typedef void (*ti_rx_callback_t)(const uint8_t *data, uint16_t len);
+typedef void (*ti_cmd_callback_t)(const ti_cmd_t *cmd);
 
 /**
  * @brief 初始化 TI 软串口接收
@@ -31,24 +51,15 @@ typedef void (*ti_rx_callback_t)(const uint8_t *data, uint16_t len);
 bool ti_init(void);
 
 /**
- * @brief 设置接收回调函数
+ * @brief 设置命令回调函数
  * @param callback 回调函数指针
  */
-void ti_set_callback(ti_rx_callback_t callback);
+void ti_set_callback(ti_cmd_callback_t callback);
 
 /**
- * @brief 获取可用接收数据字节数
- * @return 可用字节数
+ * @brief 轮询接收并解析 TI 命令
  */
-uint16_t ti_get_rx_available(void);
-
-/**
- * @brief 非阻塞读取接收数据
- * @param buffer 接收缓冲区
- * @param size 期望读取的字节数
- * @return 实际读取的字节数
- */
-uint16_t ti_read(uint8_t *buffer, uint16_t size);
+void ti_update(void);
 
 #ifdef __cplusplus
 }

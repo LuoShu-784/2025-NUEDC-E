@@ -8,8 +8,9 @@ extern "C" {
 #include "stm32f4xx_hal.h"
 #include "laser.h"
 #include "soft_uart.h"
+#include "pid.h"
 
-void init(void);
+void app_init(void);
 
 #ifdef __cplusplus
 }

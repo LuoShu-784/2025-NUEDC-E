@@ -9,11 +9,11 @@ volatile int current_speed_R = 0;
 volatile int target_speed_L = 0;
 volatile int target_speed_R = 0;
 
-#define DEADZONE_PWM 800
+#define DEADZONE_PWM 900
 #define K_FF 0.0f
 
-PID_TypeDef pid_left  = {17.0f, 1.2f, 0.8f, 0.0f, 0, 2100.0f, 3000.0f}; 
-PID_TypeDef pid_right = {14.0f, 1.0f, 0.8f, 0.0f, 0, 1800.0f, 3000.0f};
+PID_TypeDef pid_left  = {17.8f, 3.4f, 0.8f, 0.0f, 0, 2100.0f, 3000.0f}; 
+PID_TypeDef pid_right = {14.8f, 2.8f, 0.8f, 0.0f, 0, 2000.0f, 3000.0f};
 
 void GROUP1_IRQHandler(void) {
     uint32_t iidx = DL_GPIO_getPendingInterrupt(EECODER_PORT);
@@ -146,7 +146,7 @@ void Motor_Control_Loop(void) {
         if (sync_integral < -300) sync_integral = -300;
 
         float sync_kp = 15.0f; 
-        float sync_ki = 1.2f;
+        float sync_ki = 1.0f;
         int sync_comp = (int)(pulse_diff * sync_kp + sync_integral * sync_ki);
         pwm_L -= sync_comp;
         pwm_R += sync_comp;

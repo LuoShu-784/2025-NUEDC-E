@@ -32,3 +32,15 @@ void UART1_INST_IRQHandler(void)
             break;
     }
 }
+
+
+void uart3_send_char(char ch) {
+    while( DL_UART_isBusy(UART3_INST) == true );
+    DL_UART_Main_transmitData(UART3_INST, ch);
+}
+
+void uart3_send_string(char* str) {
+    while(*str != 0) {
+        uart3_send_char(*str++);
+    }
+}

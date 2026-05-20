@@ -42,6 +42,7 @@
 
 DL_TimerA_backupConfig gPWM_0Backup;
 DL_TimerA_backupConfig gTIMER_0Backup;
+DL_UART_Main_backupConfig gUART3Backup;
 
 /*
  *  ======== SYSCFG_DL_init ========
@@ -57,11 +58,12 @@ SYSCONFIG_WEAK void SYSCFG_DL_init(void)
     SYSCFG_DL_TIMER_0_init();
     SYSCFG_DL_OLED_init();
     SYSCFG_DL_UART1_init();
+    SYSCFG_DL_UART3_init();
     SYSCFG_DL_SYSTICK_init();
     /* Ensure backup structures have no valid state */
 	gPWM_0Backup.backupRdy 	= false;
 	gTIMER_0Backup.backupRdy 	= false;
-
+	gUART3Backup.backupRdy 	= false;
 
 }
 /*
@@ -74,6 +76,7 @@ SYSCONFIG_WEAK bool SYSCFG_DL_saveConfiguration(void)
 
 	retStatus &= DL_TimerA_saveConfiguration(PWM_0_INST, &gPWM_0Backup);
 	retStatus &= DL_TimerA_saveConfiguration(TIMER_0_INST, &gTIMER_0Backup);
+	retStatus &= DL_UART_Main_saveConfiguration(UART3_INST, &gUART3Backup);
 
     return retStatus;
 }
@@ -85,6 +88,7 @@ SYSCONFIG_WEAK bool SYSCFG_DL_restoreConfiguration(void)
 
 	retStatus &= DL_TimerA_restoreConfiguration(PWM_0_INST, &gPWM_0Backup, false);
 	retStatus &= DL_TimerA_restoreConfiguration(TIMER_0_INST, &gTIMER_0Backup, false);
+	retStatus &= DL_UART_Main_restoreConfiguration(UART3_INST, &gUART3Backup);
 
     return retStatus;
 }
@@ -97,6 +101,7 @@ SYSCONFIG_WEAK void SYSCFG_DL_initPower(void)
     DL_TimerA_reset(TIMER_0_INST);
     DL_I2C_reset(OLED_INST);
     DL_UART_Main_reset(UART1_INST);
+    DL_UART_Main_reset(UART3_INST);
 
 
     DL_GPIO_enablePower(GPIOA);
@@ -105,6 +110,7 @@ SYSCONFIG_WEAK void SYSCFG_DL_initPower(void)
     DL_TimerA_enablePower(TIMER_0_INST);
     DL_I2C_enablePower(OLED_INST);
     DL_UART_Main_enablePower(UART1_INST);
+    DL_UART_Main_enablePower(UART3_INST);
 
     delay_cycles(POWER_STARTUP_DELAY);
 }
@@ -133,6 +139,10 @@ SYSCONFIG_WEAK void SYSCFG_DL_GPIO_init(void)
         GPIO_UART1_IOMUX_TX, GPIO_UART1_IOMUX_TX_FUNC);
     DL_GPIO_initPeripheralInputFunction(
         GPIO_UART1_IOMUX_RX, GPIO_UART1_IOMUX_RX_FUNC);
+    DL_GPIO_initPeripheralOutputFunction(
+        GPIO_UART3_IOMUX_TX, GPIO_UART3_IOMUX_TX_FUNC);
+    DL_GPIO_initPeripheralInputFunction(
+        GPIO_UART3_IOMUX_RX, GPIO_UART3_IOMUX_RX_FUNC);
 
     DL_GPIO_initDigitalOutput(LED_LED_B22_IOMUX);
 
@@ -409,6 +419,41 @@ SYSCONFIG_WEAK void SYSCFG_DL_UART1_init(void)
 
 
     DL_UART_Main_enable(UART1_INST);
+}
+static const DL_UART_Main_ClockConfig gUART3ClockConfig = {
+    .clockSel    = DL_UART_MAIN_CLOCK_MFCLK,
+    .divideRatio = DL_UART_MAIN_CLOCK_DIVIDE_RATIO_1
+};
+
+static const DL_UART_Main_Config gUART3Config = {
+    .mode        = DL_UART_MAIN_MODE_NORMAL,
+    .direction   = DL_UART_MAIN_DIRECTION_TX_RX,
+    .flowControl = DL_UART_MAIN_FLOW_CONTROL_NONE,
+    .parity      = DL_UART_MAIN_PARITY_NONE,
+    .wordLength  = DL_UART_MAIN_WORD_LENGTH_8_BITS,
+    .stopBits    = DL_UART_MAIN_STOP_BITS_ONE
+};
+
+SYSCONFIG_WEAK void SYSCFG_DL_UART3_init(void)
+{
+    DL_UART_Main_setClockConfig(UART3_INST, (DL_UART_Main_ClockConfig *) &gUART3ClockConfig);
+
+    DL_UART_Main_init(UART3_INST, (DL_UART_Main_Config *) &gUART3Config);
+    /*
+     * Configure baud rate by setting oversampling and baud rate divisors.
+     *  Target baud rate: 9600
+     *  Actual baud rate: 9598.08
+     */
+    DL_UART_Main_setOversampling(UART3_INST, DL_UART_OVERSAMPLING_RATE_16X);
+    DL_UART_Main_setBaudRateDivisor(UART3_INST, UART3_IBRD_4_MHZ_9600_BAUD, UART3_FBRD_4_MHZ_9600_BAUD);
+
+
+    /* Configure Interrupts */
+    DL_UART_Main_enableInterrupt(UART3_INST,
+                                 DL_UART_MAIN_INTERRUPT_RX);
+
+
+    DL_UART_Main_enable(UART3_INST);
 }
 
 SYSCONFIG_WEAK void SYSCFG_DL_SYSTICK_init(void)

@@ -6,6 +6,7 @@
 #include <stdio.h>
 
 typedef struct {
+    bool raw;
     log_level_t level;
     char tag[APP_LOG_TAG_SIZE];
     char message[APP_LOG_MESSAGE_SIZE];
@@ -50,16 +51,38 @@ void app_log_process(void)
     log_msg_t msg;
     while (osMessageQueueGet(log_queue_handle, &msg, NULL, 0) == osOK)
     {
-        log_write(msg.level, msg.tag, "%s", msg.message);
+        if (msg.raw)
+        {
+            log_output_handler(msg.message, (uint16_t)strlen(msg.message));
+            log_output_handler("\r\n", 2);
+        }
+        else
+        {
+            log_write(msg.level, msg.tag, "%s", msg.message);
+        }
     }
 }
 
 void logq_write(log_level_t level, const char *tag, const char *fmt, ...)
 {
-    log_msg_t msg = {.level = level};
+    log_msg_t msg = {.raw = false, .level = level};
 
     strncpy(msg.tag, tag, sizeof(msg.tag) - 1);
     msg.tag[sizeof(msg.tag) - 1] = '\0';
+
+    va_list args;
+    va_start(args, fmt);
+    vsnprintf(msg.message, sizeof(msg.message), fmt, args);
+    va_end(args);
+
+    log_queue_push(&msg);
+}
+
+void logq_printf(const char *fmt, ...)
+{
+    log_msg_t msg = {.raw = true, .level = LOG_LEVEL_DEBUG};
+
+    msg.tag[0] = '\0';
 
     va_list args;
     va_start(args, fmt);

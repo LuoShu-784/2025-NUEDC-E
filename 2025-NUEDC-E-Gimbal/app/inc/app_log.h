@@ -28,7 +28,7 @@ void app_log_init(void);
 void app_log_process(void);
 
 void log_output_handler(const char *str, uint16_t len);
-
+void logq_printf(const char *fmt, ...);
 /* Queue-based logging function (ISR-safe) */
 void logq_write(log_level_t level, const char *tag, const char *fmt, ...);
 

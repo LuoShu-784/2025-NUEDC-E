@@ -69,6 +69,8 @@ static uint32_t lock_start_tick = 0U;
 
 static float pitch_output = 0.0f;
 static float yaw_output = 0.0f;
+static float pitch_output_last = 0.0f;
+static float yaw_output_last = 0.0f;
 static float pitch_err_filtered = 0.0f;
 static float yaw_err_filtered = 0.0f;
 
@@ -143,6 +145,8 @@ static void reset_control_state(void)
 
     pitch_output = 0.0f;
     yaw_output = 0.0f;
+    pitch_output_last = 0.0f;
+    yaw_output_last = 0.0f;
     pitch_err_filtered = 0.0f;
     yaw_err_filtered = 0.0f;
     lock_start_tick = 0U;
@@ -192,6 +196,7 @@ static void pitch_control_step(float err_y)
     if (is_near_zero(err_y, PITCH_DEADZONE_PX)) {
         pid_reset(&pid_pitch);
         pitch_output = 0.0f;
+        pitch_output_last = 0.0f;
         motor_set_speed(PITCH, 0.0f);
         return;
     }
@@ -199,7 +204,8 @@ static void pitch_control_step(float err_y)
     pitch_err_filtered = low_pass_filter(err_y, pitch_err_filtered, PITCH_FILTER_ALPHA);
     pitch_output = pid_calc(&pid_pitch, PITCH_OFFSET_PX, pitch_err_filtered);
     pitch_output = apply_min_effective_speed(pitch_output, PITCH_MIN_EFFECTIVE_SPEED);
-    pitch_output = apply_slew_rate(pitch_output, pitch_output, PITCH_SLEW_RATE_PER_CYCLE);
+    pitch_output = apply_slew_rate(pitch_output, pitch_output_last, PITCH_SLEW_RATE_PER_CYCLE);
+    pitch_output_last = pitch_output;
     motor_set_speed(PITCH, PITCH_POLARITY * pitch_output);
 }
 
@@ -208,6 +214,7 @@ static void yaw_control_step(float err_x)
     if (is_near_zero(err_x, YAW_DEADZONE_PX)) {
         pid_reset(&pid_yaw);
         yaw_output = 0.0f;
+        yaw_output_last = 0.0f;
         motor_set_speed(YAW, 0.0f);
         return;
     }
@@ -215,7 +222,8 @@ static void yaw_control_step(float err_x)
     yaw_err_filtered = low_pass_filter(err_x, yaw_err_filtered, YAW_FILTER_ALPHA);
     yaw_output = pid_calc(&pid_yaw, YAW_OFFSET_PX, yaw_err_filtered);
     yaw_output = apply_min_effective_speed(yaw_output, YAW_MIN_EFFECTIVE_SPEED);
-    yaw_output = apply_slew_rate(yaw_output, yaw_output, YAW_SLEW_RATE_PER_CYCLE);
+    yaw_output = apply_slew_rate(yaw_output, yaw_output_last, YAW_SLEW_RATE_PER_CYCLE);
+    yaw_output_last = yaw_output;
     motor_set_speed(YAW, YAW_POLARITY * yaw_output);
 }
 
@@ -223,6 +231,10 @@ static void tracking_step(uint32_t current_tick)
 {
     float err_x = (float)k230_dat.err_x;
     float err_y = (float)k230_dat.err_y;
+
+    if (aim_state != AIM_STATE_LOCKED) {
+        set_aim_state(AIM_STATE_TRACKING);
+    }
 
     pitch_control_step(err_y);
     yaw_control_step(err_x);

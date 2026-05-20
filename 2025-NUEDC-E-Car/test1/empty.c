@@ -308,6 +308,7 @@ uint8_t is_running = 0;
 
 volatile uint32_t left_turn_count = 0;   
 volatile uint32_t target_left_turns = 0; 
+volatile uint32_t last_turn_end_time = 0;
 
 typedef struct {
     int L3, L2, L1, C, R1, R2, R3;
@@ -346,17 +347,17 @@ void Track_Task(void) {
 
     switch (current_state) {
         case STATE_TRACKING:
-            if (s.L3 == 1 && s.R3 == 0) { 
+            if (s.L3 == 1 && s.R3 == 0 && (sys_tick - last_turn_end_time) >= 100) { 
                 current_state = STATE_TURN_LEFT_BLIND;
                 turn_start_time = sys_tick; 
                 Car_SetSpeed(base_speed, base_speed); 
-            } 
+            }
             else {
                 int active_count = s.L2 + s.L1 + s.C + s.R1 + s.R2 + s.R3;
                 int error = 0;
                 if (active_count > 0) {
-                    int sum = (s.L2 * -2) + (s.L1 * -1) + (s.C * 0) + (s.R1 * 1) + (s.R2 * 2) + (s.R3 * 4);
-                    error = (sum * 2) / active_count; 
+                    int sum = (s.L2 * -7) + (s.L1 * -5) + (s.C * 0) + (s.R1 * 5) + (s.R2 * 7) + (s.R3 * 8);
+                    error = sum / active_count; 
                 } else {
                     error = last_error; 
                 }
@@ -371,20 +372,22 @@ void Track_Task(void) {
             break;
 
         case STATE_TURN_LEFT_BLIND:
-            if ((sys_tick - turn_start_time) >= 24) {
+            if ((sys_tick - turn_start_time) >= 20) {
                 current_state = STATE_TURN_LEFT_ROTATE;
                 turn_start_time = sys_tick; 
-                Car_SetSpeed(-1, 30); 
+                Car_SetSpeed(-2, 24); 
             }
             break;
 
         case STATE_TURN_LEFT_ROTATE:
             // if ((sys_tick - turn_start_time) > 1) {
-                if (s.C == 1 || s.L1 == 1 || s.R1 == 1||s.R2 == 1||s.R3 == 1||s.L2 == 1 ) { 
+                if (s.C == 1 || s.L1 == 1 || s.R1 == 1 ) { 
+                    Car_SetSpeed(base_speed+10, base_speed-10); 
                     current_state = STATE_TRACKING; 
                     last_error = 0;
                     
                     left_turn_count++;
+                    last_turn_end_time = sys_tick;
                     
                     if (target_left_turns > 0 && left_turn_count >= target_left_turns) {
                         is_running = 0;       
@@ -435,7 +438,7 @@ int main(void)
     OLED_Refresh();
     delay_ms(1000); 
 
-    int display_count = 0;
+    uint32_t last_display_time = 0;
   
     while (1) {
         key_raw = KEY_Scan();
@@ -485,17 +488,34 @@ int main(void)
             }
         }
 
-        display_count++;
-        if (display_count >= 2) { 
-            display_count = 0;
+        if (sys_tick - last_display_time >= 10) { 
+            last_display_time = sys_tick;
             OLED_Clear();
-            if(is_running) sprintf(display_str, "Mode:%d  [RUN]", current_mode);
-            else sprintf(display_str, "Mode:%d  [STOP]", current_mode);
+
+            char *state_str = "WAIT ";
+            char *uart_state_str = "WAITING";
+            if (is_running) {
+                if (current_state == STATE_TRACKING) {
+                    state_str = "11111";
+                    uart_state_str = "TRACKING";
+                }
+                else if (current_state == STATE_TURN_LEFT_BLIND) {
+                    state_str = "2222";
+                    uart_state_str = "BLIND";
+                }
+                else if (current_state == STATE_TURN_LEFT_ROTATE) {
+                    state_str = "3333";
+                    uart_state_str = "ROTATE";
+                }
+            }
+
+
+            if(is_running) sprintf(display_str, "M:%d RUN [%s]", current_mode, state_str);
+            else sprintf(display_str, "M:%d STOP       ", current_mode);
             OLED_ShowString(0, 0, (u8*)display_str, 16);
 
             sprintf(display_str, "Tar: L%-4d R%-4d", target_speed_L, target_speed_R);
             OLED_ShowString(0, 16, (u8*)display_str, 16);
-
             sprintf(display_str, "Cur: L%-4d R%-4d", current_speed_L, current_speed_R);
             OLED_ShowString(0, 32, (u8*)display_str, 16);
 
@@ -507,6 +527,17 @@ int main(void)
             OLED_ShowString(0, 48, (u8*)display_str, 16);
             
             OLED_Refresh();
+            char uart_tx_buf[128]; 
+
+            sprintf(uart_tx_buf, 
+                "[%lu] State: %s | Tar_L: %d, Tar_R: %d | Cur_L: %d, Cur_R: %d\r\n", 
+                sys_tick, 
+                uart_state_str,
+                target_speed_L, target_speed_R, 
+                current_speed_L, current_speed_R
+            );
+
+            uart3_send_string(uart_tx_buf);
         }
         // delay_ms(10); 
     }

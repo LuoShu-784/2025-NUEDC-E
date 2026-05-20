@@ -75,6 +75,13 @@ const osThreadAttr_t COMM_attributes = {
   .stack_size = 512 * 4,
   .priority = (osPriority_t) osPriorityRealtime7,
 };
+/* Definitions for BUZZER */
+osThreadId_t BUZZERHandle;
+const osThreadAttr_t BUZZER_attributes = {
+  .name = "BUZZER",
+  .stack_size = 256 * 4,
+  .priority = (osPriority_t) osPriorityNormal,
+};
 
 /* Private function prototypes -----------------------------------------------*/
 /* USER CODE BEGIN FunctionPrototypes */
@@ -85,6 +92,7 @@ void led_task(void *argument);
 void app_main_task(void *argument);
 void log_task(void *argument);
 void comm_task(void *argument);
+void buzzer_task(void *argument);
 
 void MX_FREERTOS_Init(void); /* (MISRA C 2004 rule 8.1) */
 
@@ -126,6 +134,9 @@ void MX_FREERTOS_Init(void) {
 
   /* creation of COMM */
   COMMHandle = osThreadNew(comm_task, NULL, &COMM_attributes);
+
+  /* creation of BUZZER */
+  BUZZERHandle = osThreadNew(buzzer_task, NULL, &BUZZER_attributes);
 
   /* USER CODE BEGIN RTOS_THREADS */
   /* add threads, ... */
@@ -207,6 +218,24 @@ __weak void comm_task(void *argument)
     osDelay(1);
   }
   /* USER CODE END comm_task */
+}
+
+/* USER CODE BEGIN Header_buzzer_task */
+/**
+* @brief Function implementing the BUZZER thread.
+* @param argument: Not used
+* @retval None
+*/
+/* USER CODE END Header_buzzer_task */
+__weak void buzzer_task(void *argument)
+{
+  /* USER CODE BEGIN buzzer_task */
+  /* Infinite loop */
+  for(;;)
+  {
+    osDelay(1);
+  }
+  /* USER CODE END buzzer_task */
 }
 
 /* Private application code --------------------------------------------------*/

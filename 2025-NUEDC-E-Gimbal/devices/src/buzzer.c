@@ -6,6 +6,7 @@
 #include "buzzer.h"
 #include "main.h"
 #include <stdbool.h>
+#include <stddef.h>
 
 extern TIM_HandleTypeDef htim4;
 
@@ -51,17 +52,30 @@ void buzzer_stop(void)
     __HAL_TIM_SET_COMPARE(&htim4, TIM_CHANNEL_3, 0);
 }
 
+void buzzer_stop_music(void)
+{
+    buzzer_stop();
+    buzzer_state.music = NULL;
+    buzzer_state.length = 0;
+    buzzer_state.current_index = 0;
+    buzzer_state.note_start_tick = 0;
+    buzzer_state.playing = false;
+}
+
 void buzzer_play_music(const music_note_t *music, uint16_t length)
 {
+    if (music == NULL || length == 0U) {
+        buzzer_stop_music();
+        return;
+    }
+
     buzzer_state.music = music;
     buzzer_state.length = length;
     buzzer_state.current_index = 0;
     buzzer_state.note_start_tick = HAL_GetTick();
     buzzer_state.playing = true;
 
-    if (length > 0) {
-        buzzer_play_note(music[0].note);
-    }
+    buzzer_play_note(music[0].note);
 }
 
 bool buzzer_is_playing(void)

@@ -64,6 +64,7 @@ typedef struct {
 void buzzer_init(void);
 void buzzer_play_note(note_t note);
 void buzzer_stop(void);
+void buzzer_stop_music(void);
 void buzzer_play_music(const music_note_t *music, uint16_t length);
 bool buzzer_is_playing(void);
 void buzzer_update(void);

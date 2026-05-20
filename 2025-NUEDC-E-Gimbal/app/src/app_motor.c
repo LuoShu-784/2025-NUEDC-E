@@ -13,13 +13,32 @@ static CAN_HandleTypeDef *hcan;
 static qd4310_t motor0;
 static qd4310_t motor1;
 
-static inline float motor_rad_to_deg(float rad)
+static float motor_normalize_angle_deg(float angle_deg)
 {
-    return rad * MOTOR_RAD_TO_DEG;
+    while (angle_deg > 180.0f) {
+        angle_deg -= 360.0f;
+    }
+
+    while (angle_deg < -180.0f) {
+        angle_deg += 360.0f;
+    }
+
+    return angle_deg;
 }
 
-static inline float motor_deg_to_rad(float deg)
+static inline float motor_rad_to_deg(float rad)
 {
+    return motor_normalize_angle_deg(rad * MOTOR_RAD_TO_DEG);
+}
+
+static float motor_deg_to_qd_rad(float deg)
+{
+    deg = motor_normalize_angle_deg(deg);
+
+    if (deg < 0.0f) {
+        deg += 360.0f;
+    }
+
     return deg * MOTOR_DEG_TO_RAD;
 }
 
@@ -165,7 +184,7 @@ void motor_set_angle(uint8_t id, float angle_deg)
         return;
     }
 
-    qd4310_set_angle(motor, motor_deg_to_rad(angle_deg));
+    qd4310_set_angle(motor, motor_deg_to_qd_rad(angle_deg));
 }
 
 void motor_set_low_speed(uint8_t id, float speed)
